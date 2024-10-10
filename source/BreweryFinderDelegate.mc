@@ -14,13 +14,6 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
         _notify = handler;
     }
 
-    //! On a menu event, make a web request
-    //! @return true if handled, false otherwise
-    public function onMenu() as Boolean {
-        makeRequest();
-        return true;
-    }
-
     //! On a select event, make a web request
     //! @return true if handled, false otherwise
     public function onSelect() as Boolean {
@@ -30,7 +23,7 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
 
     //! Make the web request
     private function makeRequest() as Void {
-        _notify.invoke("Executing\nRequest");
+        _notify.invoke("loading");
 
         var options = {
             :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON,
@@ -43,9 +36,12 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
         var lat = 35.779591;
         var lon = -78.638176;
 
-        if(positionInfo has :latitude && positionInfo has :longitude) {
-            lat = positionInfo.latitude;
-            lon = positionInfo.longitude;
+        if(positionInfo.position != null) {
+            var degrees = positionInfo.position.toDegrees();
+            System.println(degrees[0]);
+            lat = degrees[0];
+            System.println(degrees[1]);
+            lon = degrees[1];
         }
 
         System.println("Latitude: " + lat);
@@ -92,7 +88,7 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
                     );
                 }
                 WatchUi.pushView(menu, delegate, WatchUi.SLIDE_BLINK);
-                System.print(data.toString());
+                // System.print(data.toString());
             }
         } else {
             _notify.invoke("Failed to load\nError: " + responseCode.toString());

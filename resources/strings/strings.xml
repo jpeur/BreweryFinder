@@ -2,7 +2,6 @@
     <string id="AppName">BreweryFinder</string>
 
     <string id="prompt">Press Start to find breweries</string>
+    <string id="prompt2">Loading breweries near you!</string>
 
-    <string id="menu_label_1">Item 1</string>
-    <string id="menu_label_2">Item 2</string>
 </strings>

@@ -3,11 +3,10 @@ import Toybox.WatchUi;
 import Toybox.Lang;
 
 class BreweryFinderView extends WatchUi.View {
-    private var _message as String = "Press Start to get breweries";
+    private var _message as String = "starting";
 
-    // var myText;
+    var myText;
 
-    //! Constructor
     public function initialize() {
         WatchUi.View.initialize();
     }
@@ -15,16 +14,6 @@ class BreweryFinderView extends WatchUi.View {
     //! Load your resources here
     //! @param dc Device context
     public function onLayout(dc as Dc) as Void {
-        // myText = new WatchUi.TextArea({
-        //     :text=>_message,
-        //     :color=>Graphics.COLOR_WHITE,
-        //     :font=>Graphics.FONT_MEDIUM,
-        //     :locX=>WatchUi.LAYOUT_HALIGN_CENTER,
-        //     :locY=>WatchUi.LAYOUT_VALIGN_CENTER,
-        //     :justification=>Graphics.TEXT_JUSTIFY_CENTER,
-        //     :width=> dc.getWidth() * 0.9,
-        //     :height=> dc.getHeight() * 0.9,
-        // });
         setLayout(Rez.Layouts.MainLayout(dc));
     }
 
@@ -39,6 +28,11 @@ class BreweryFinderView extends WatchUi.View {
         // dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
         // dc.clear();
         // myText.draw(dc);
+        if(_message.equals("loading"))
+        {
+            setLayout(Rez.Layouts.LoadingLayout(dc));
+        }
+
         View.onUpdate(dc);
     }
 
