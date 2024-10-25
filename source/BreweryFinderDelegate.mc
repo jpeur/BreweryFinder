@@ -40,14 +40,14 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
 
         if(positionInfo.position != null) {
             var degrees = positionInfo.position.toDegrees();
-            System.println(degrees[0]);
+            // System.println(degrees[0]);
             lat = degrees[0];
-            System.println(degrees[1]);
+            // System.println(degrees[1]);
             lon = degrees[1];
         }
 
-        System.println("Latitude: " + lat);
-        System.println("Longitude: " + lon);
+        // System.println("Latitude: " + lat);
+        // System.println("Longitude: " + lon);
 
         var API_string = "https://api.openbrewerydb.org/breweries?by_dist=" + lat + "," + lon +"&per_page=10";
 
@@ -101,6 +101,6 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
         } else {
             _notify.invoke("Failed to load\nError: " + responseCode.toString());
         }
-        System.println(brewery_dict.toString());
+        // System.println(brewery_dict.toString());
     }
 }
