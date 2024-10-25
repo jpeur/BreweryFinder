@@ -1,3 +1,4 @@
 <drawables>
     <bitmap id="LauncherIcon" filename="launcher_icon.png" />
+    <bitmap id="beer_mug" filename="beer_mug_logo.png" />
 </drawables>
