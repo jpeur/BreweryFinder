@@ -1,7 +1,7 @@
 <strings>
     <string id="AppName">BreweryFinder</string>
 
-    <string id="prompt">Press Start to find breweries</string>
-    <string id="prompt2">Loading breweries near you!</string>
+    <string id="prompt">Press Start to find breweries near you!</string>
+    <string id="prompt2">Loading breweries...</string>
 
 </strings>
