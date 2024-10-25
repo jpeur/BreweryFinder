@@ -7,6 +7,8 @@ using Toybox.System;
 class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
     private var _notify as Method(args as Dictionary or String or Null) as Void;
 
+    var brewery_dict = {};
+
     //! Set up the callback to the view
     //! @param handler Callback method for when data is received
     public function initialize(handler as Method(args as Dictionary or String or Null) as Void) {
@@ -58,7 +60,7 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
     }
 
     var menu = new WatchUi.Menu2({:title=>"Brewery List"});
-    var delegate = new BreweryMenu2Delegate();
+    var delegate = new BreweryMenu2Delegate(brewery_dict);
 
     //! Receive the data from the web request
     //! @param responseCode The server response code
@@ -74,10 +76,16 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
 
                     var name = brewery["name"];
                     var type = brewery["brewery_type"];
+                    var street = brewery["street"];
+                    var city = brewery["city"];
+                    var state = brewery["state"];
+
+                    brewery_dict[name] =[type, street, city, state];
+                    // System.println(brewery.toString());
 
                     // Access properties
-                    System.println("Name: " + name);
-                    System.println("Type: " + type);
+                    // System.println("Name: " + name);
+                    // System.println("Type: " + type);
                     menu.addItem(
                         new MenuItem(
                             name,
@@ -93,5 +101,6 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
         } else {
             _notify.invoke("Failed to load\nError: " + responseCode.toString());
         }
+        System.println(brewery_dict.toString());
     }
 }
