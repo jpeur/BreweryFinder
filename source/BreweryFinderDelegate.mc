@@ -58,7 +58,7 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
     }
 
     var menu = new WatchUi.Menu2({:title=>"Brewery List"});
-    var delegate = new WatchUi.Menu2InputDelegate();
+    var delegate = new BreweryMenu2Delegate();
 
     //! Receive the data from the web request
     //! @param responseCode The server response code
