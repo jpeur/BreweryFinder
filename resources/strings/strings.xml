@@ -3,5 +3,6 @@
 
     <string id="prompt">Press Start to find breweries near you!</string>
     <string id="prompt2">Loading breweries...</string>
+    <string id="prompt3">Acquiring location...</string>
 
 </strings>

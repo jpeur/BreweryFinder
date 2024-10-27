@@ -9,6 +9,16 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
 
     var brewery_dict = {};
 
+    var latitude = 0.0;
+    var longitude = 0.0;
+
+    function onPosition(loc as Position.Info) as Void {
+        var myLocation = loc.position.toDegrees();
+        latitude = myLocation[0];
+        longitude = myLocation[1];
+        makeRequest();
+    }
+
     //! Set up the callback to the view
     //! @param handler Callback method for when data is received
     public function initialize(handler as Method(args as Dictionary or String or Null) as Void) {
@@ -19,7 +29,9 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
     //! On a select event, make a web request
     //! @return true if handled, false otherwise
     public function onSelect() as Boolean {
-        makeRequest();
+        // makeRequest();
+        Position.enableLocationEvents(Position.LOCATION_ONE_SHOT, method(:onPosition));
+        _notify.invoke("acquire");
         return true;
     }
 
@@ -34,22 +46,26 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
             }
         };
 
-        var positionInfo = Position.getInfo();
-        var lat = 35.779591;
-        var lon = -78.638176;
+        // var positionInfo = Position.getInfo();
+        // var lat = 35.779591;
+        // var lon = -78.638176;
 
-        if(positionInfo.position != null) {
-            var degrees = positionInfo.position.toDegrees();
-            // System.println(degrees[0]);
-            lat = degrees[0];
-            // System.println(degrees[1]);
-            lon = degrees[1];
+        // if(positionInfo.position != null) {
+        //     var degrees = positionInfo.position.toDegrees();
+        //     // System.println(degrees[0]);
+        //     lat = degrees[0];
+        //     // System.println(degrees[1]);
+        //     lon = degrees[1];
+        // }
+
+        System.println("Latitude: " + latitude);
+        System.println("Longitude: " + longitude);
+
+        if(latitude.toNumber() == 0) {
+            System.println("No location data available");
         }
 
-        // System.println("Latitude: " + lat);
-        // System.println("Longitude: " + lon);
-
-        var API_string = "https://api.openbrewerydb.org/breweries?by_dist=" + lat + "," + lon +"&per_page=10";
+        var API_string = "https://api.openbrewerydb.org/breweries?by_dist=" + latitude + "," + longitude +"&per_page=10";
 
         Communications.makeWebRequest(
             API_string,

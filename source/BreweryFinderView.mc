@@ -33,6 +33,11 @@ class BreweryFinderView extends WatchUi.View {
             setLayout(Rez.Layouts.LoadingLayout(dc));
         }
 
+        if(_message.equals("acquire"))
+        {
+            setLayout(Rez.Layouts.AcquireLayout(dc));
+        }
+
         View.onUpdate(dc);
     }
 
