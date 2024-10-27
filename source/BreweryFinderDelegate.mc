@@ -3,6 +3,7 @@ import Toybox.WatchUi;
 import Toybox.Communications;
 using Toybox.Position;
 using Toybox.System;
+using Toybox.Time;
 
 class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
     private var _notify as Method(args as Dictionary or String or Null) as Void;
@@ -30,6 +31,15 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
     //! @return true if handled, false otherwise
     public function onSelect() as Boolean {
         // makeRequest();
+        var positionInfo = Position.getInfo();
+        var now = Time.now();
+
+        if(positionInfo.when != null) {
+            if (now.subtract(positionInfo.when).value() < 1800) {
+                onPosition(positionInfo);
+                return true;
+            }
+        }
         Position.enableLocationEvents(Position.LOCATION_ONE_SHOT, method(:onPosition));
         _notify.invoke("acquire");
         return true;
