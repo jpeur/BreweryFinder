@@ -4,6 +4,7 @@ import Toybox.Communications;
 using Toybox.Position;
 using Toybox.System;
 using Toybox.Time;
+using Toybox.Application.Storage;
 
 class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
     private var _notify as Method(args as Dictionary or String or Null) as Void;
@@ -25,6 +26,9 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
     public function initialize(handler as Method(args as Dictionary or String or Null) as Void) {
         WatchUi.BehaviorDelegate.initialize();
         _notify = handler;
+        if(Storage.getValue("lastUpdate") == null) {
+            Storage.setValue("lastUpdate", 0);
+        }
     }
 
     //! On a select event, make a web request
@@ -32,15 +36,22 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
     public function onSelect() as Boolean {
         // makeRequest();
         var positionInfo = Position.getInfo();
-        var now = Time.now();
+        var now = new Time.Moment(Time.now().value());
+
+        System.println("Now: " + now.value());
+        System.println("When: " + Storage.getValue("lastUpdate"));
 
         if(positionInfo.when != null) {
-            if (now.subtract(positionInfo.when).value() < 1800) {
+            if (now.value() - Storage.getValue("lastUpdate") < 600) {
+                // System.println(now.subtract(positionInfo.when).value());
+                // System.println("Difference: " + now.value() - Storage.getValue("lastUpdate"));
                 onPosition(positionInfo);
                 return true;
             }
         }
         Position.enableLocationEvents(Position.LOCATION_ONE_SHOT, method(:onPosition));
+        Storage.setValue("lastUpdate", now.value());
+        System.println("Last Update: " + Storage.getValue("lastUpdate"));
         _notify.invoke("acquire");
         return true;
     }
