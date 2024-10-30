@@ -21,6 +21,16 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
         makeRequest();
     }
 
+    function oldPosition(loc as Position.Info) as Void {
+        var myLocation = loc.position.toDegrees();
+        latitude = myLocation[0];
+        longitude = myLocation[1];
+        var now = new Time.Moment(Time.now().value());
+        Storage.setValue("lastUpdate", now.value());
+        // System.println("Last Update: " + Storage.getValue("lastUpdate"));
+        loadData();
+    }
+
     //! Set up the callback to the view
     //! @param handler Callback method for when data is received
     public function initialize(handler as Method(args as Dictionary or String or Null) as Void) {
@@ -28,6 +38,9 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
         _notify = handler;
         if(Storage.getValue("lastUpdate") == null) {
             Storage.setValue("lastUpdate", 0);
+        }
+        if(Storage.getValue("lastDict") == null) {
+            Storage.setValue("lastDict", {});
         }
     }
 
@@ -42,18 +55,45 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
         System.println("When: " + Storage.getValue("lastUpdate"));
 
         if(positionInfo.when != null) {
-            if (now.value() - Storage.getValue("lastUpdate") < 600) {
+            if (now.value() - Storage.getValue("lastUpdate") < 600 && Storage.getValue("lastDict") != null && Storage.getValue("lastDict").size() > 0) {
                 // System.println(now.subtract(positionInfo.when).value());
                 // System.println("Difference: " + now.value() - Storage.getValue("lastUpdate"));
-                onPosition(positionInfo);
+                oldPosition(positionInfo);
                 return true;
             }
         }
+        // oldPosition(positionInfo);
         Position.enableLocationEvents(Position.LOCATION_ONE_SHOT, method(:onPosition));
-        Storage.setValue("lastUpdate", now.value());
-        System.println("Last Update: " + Storage.getValue("lastUpdate"));
         _notify.invoke("acquire");
         return true;
+    }
+
+    private function loadData() as Void {
+        brewery_dict = Storage.getValue("lastDict");
+        System.println(brewery_dict.toString());
+        var menu = new WatchUi.Menu2({:title=>"Brewery List"});
+        var delegate = new BreweryMenu2Delegate(brewery_dict);
+
+        var keys = brewery_dict.keys();
+
+        for (var i = 0; i < keys.size(); i++) {
+            var myArr = brewery_dict[keys[i]];
+            var name = keys[i];
+            var type = myArr[0];
+            var street = myArr[1];
+            var city = myArr[2];
+            var state = myArr[3];
+
+            menu.addItem(
+                new MenuItem(
+                    name,
+                    type,
+                    "brew" + i,
+                    {}
+                )
+            );
+        }
+        WatchUi.pushView(menu, delegate, WatchUi.SLIDE_BLINK);
     }
 
     //! Make the web request
@@ -132,6 +172,7 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
                         )
                     );
                 }
+                Storage.setValue("lastDict", brewery_dict);
                 WatchUi.pushView(menu, delegate, WatchUi.SLIDE_BLINK);
                 // System.print(data.toString());
             }
