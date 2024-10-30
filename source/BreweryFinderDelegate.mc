@@ -18,6 +18,9 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
         var myLocation = loc.position.toDegrees();
         latitude = myLocation[0];
         longitude = myLocation[1];
+        var now = new Time.Moment(Time.now().value());
+        Storage.setValue("lastUpdate", now.value());
+        // System.println("Last Update: " + Storage.getValue("lastUpdate"));
         makeRequest();
     }
 
@@ -25,9 +28,6 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
         var myLocation = loc.position.toDegrees();
         latitude = myLocation[0];
         longitude = myLocation[1];
-        var now = new Time.Moment(Time.now().value());
-        Storage.setValue("lastUpdate", now.value());
-        // System.println("Last Update: " + Storage.getValue("lastUpdate"));
         loadData();
     }
 
@@ -73,6 +73,7 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
         System.println(brewery_dict.toString());
         var menu = new WatchUi.Menu2({:title=>"Brewery List"});
         var delegate = new BreweryMenu2Delegate(brewery_dict);
+        System.println(brewery_dict.toString());
 
         var keys = brewery_dict.keys();
 
