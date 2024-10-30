@@ -10,6 +10,7 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
     private var _notify as Method(args as Dictionary or String or Null) as Void;
 
     var brewery_dict = {};
+    var namesOrder = new [10];
 
     var latitude = 0.0;
     var longitude = 0.0;
@@ -41,6 +42,11 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
         }
         if(Storage.getValue("lastDict") == null) {
             Storage.setValue("lastDict", {});
+        }
+        if(Storage.getValue("namesOrder") == null) {
+        Storage.setValue("namesOrder", new [10]);
+        } else {
+            namesOrder = Storage.getValue("namesOrder");
         }
     }
 
@@ -75,11 +81,15 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
         var delegate = new BreweryMenu2Delegate(brewery_dict);
         System.println(brewery_dict.toString());
 
-        var keys = brewery_dict.keys();
+        // var keys = brewery_dict.keys();
+        namesOrder = Storage.getValue("namesOrder");
 
-        for (var i = 0; i < keys.size(); i++) {
-            var myArr = brewery_dict[keys[i]];
-            var name = keys[i];
+        for (var i = 0; i < namesOrder.size(); i++) {
+            if(namesOrder[i] == null) {
+                break;
+            }
+            var myArr = brewery_dict[namesOrder[i]];
+            var name = namesOrder[i];
             var type = myArr[0];
             var street = myArr[1];
             var city = myArr[2];
@@ -159,6 +169,7 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
                     var state = brewery["state"];
 
                     brewery_dict[name] =[type, street, city, state];
+                    namesOrder[i] = name;
                     // System.println(brewery.toString());
 
                     // Access properties
@@ -174,6 +185,7 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
                     );
                 }
                 Storage.setValue("lastDict", brewery_dict);
+                Storage.setValue("namesOrder", namesOrder);
                 WatchUi.pushView(menu, delegate, WatchUi.SLIDE_BLINK);
                 // System.print(data.toString());
             }
