@@ -57,8 +57,8 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
         var positionInfo = Position.getInfo();
         var now = new Time.Moment(Time.now().value());
 
-        System.println("Now: " + now.value());
-        System.println("When: " + Storage.getValue("lastUpdate"));
+        // System.println("Now: " + now.value());
+        // System.println("When: " + Storage.getValue("lastUpdate"));
 
         if(positionInfo.when != null) {
             if (now.value() - Storage.getValue("lastUpdate") < 600 && Storage.getValue("lastDict") != null && Storage.getValue("lastDict").size() > 0) {
@@ -76,10 +76,10 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
 
     private function loadData() as Void {
         brewery_dict = Storage.getValue("lastDict");
-        System.println(brewery_dict.toString());
+        // System.println(brewery_dict.toString());
         var menu = new WatchUi.Menu2({:title=>"Brewery List"});
         var delegate = new BreweryMenu2Delegate(brewery_dict);
-        System.println(brewery_dict.toString());
+        // System.println(brewery_dict.toString());
 
         // var keys = brewery_dict.keys();
         namesOrder = Storage.getValue("namesOrder");
@@ -118,20 +118,8 @@ class BreweryFinderDelegate extends WatchUi.BehaviorDelegate {
             }
         };
 
-        // var positionInfo = Position.getInfo();
-        // var lat = 35.779591;
-        // var lon = -78.638176;
-
-        // if(positionInfo.position != null) {
-        //     var degrees = positionInfo.position.toDegrees();
-        //     // System.println(degrees[0]);
-        //     lat = degrees[0];
-        //     // System.println(degrees[1]);
-        //     lon = degrees[1];
-        // }
-
-        System.println("Latitude: " + latitude);
-        System.println("Longitude: " + longitude);
+        // System.println("Latitude: " + latitude);
+        // System.println("Longitude: " + longitude);
 
         if(latitude.toNumber() == 0) {
             System.println("No location data available");
